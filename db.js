@@ -1,5 +1,6 @@
-const { Sequelize } = require('sequelize');
-const sequelize = new Sequelize('mysql', 'root', 'hilleladel', {
+const Sequelize = require("sequelize");
+
+const sequelize = new Sequelize('ins_db', 'root', 'hilleladel', {
     host: 'localhost',
     dialect: 'mysql'
 });
@@ -13,11 +14,8 @@ function init() {
         });
 }
 init();
-// try {
-//     await sequelize.authenticate();
-//     console.log('Connection has been established successfully.');
-// } catch (error) {
-//     console.error('Unable to connect to the database:', error);
-// }
 
 module.exports = sequelize;
+// before init run this
+// CREATE DATABASE ins_db;
+// USE ins_db;

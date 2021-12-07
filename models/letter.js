@@ -1,28 +1,27 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('sqlite::memory:');
+const Sequelize = require('sequelize');
+
+const sequelize = require('../db')
 
 const Letter = sequelize.define('Letter', {
   // Model attributes are defined here
   letterID: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true
+    type: Sequelize.INTEGER,
+    allowNull: false
   },
   letterType: {
-    type: DataTypes.STRING,
+    type: Sequelize.STRING,
     allowNull: false
   },
   insureId: {
-    type: DataTypes.INTEGER,
+    type: Sequelize.INTEGER,
     allowNull: false
   },
   destributionType: {
-    type: DataTypes.STRING,
+    type: Sequelize.STRING,
     allowNull: false
   },
   status: {
-    type: DataTypes.STRING,
+    type: Sequelize.STRING,
     allowNull: false
   },
 });

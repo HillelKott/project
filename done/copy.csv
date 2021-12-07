@@ -7,4 +7,4 @@ LettrerId,LetterType,InsuredId,DestributionType,Status
 90072,1250,444444444,eMail,Failed
 90075,1403,111111111,SMS,Success
 90077,1005,111111111,PRINT,Failed
-90079,1222,444444444,eMail,Failed
+90079,1222,444444444,eMail22,Failed

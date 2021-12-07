@@ -2,8 +2,9 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 
-const { sequelize, Model, DataTypes } = require('./db');
+const sequelize = require('./db');
 const Letter = require('./models/letter');
+const query = require('./query');
 
 const port = process.env.PORT || 5000;
 const inputFolder = __dirname;
@@ -15,8 +16,8 @@ app.get('/', (req, res) => {
 
 // setInterval(() => {
 checkFolder(inputFolder + initialCsv)
-// }, 2000)
-
+// }, 5000)
+query()
 const filesInFolder = []
 
 function checkFolder() {
@@ -40,32 +41,38 @@ function checkFolder() {
 
 function readCsvFile(file) {
     const textByLine = fs.readFileSync(inputFolder + initialCsv + file).toString().split("\n");
-    const res = textByLine.map((line) => line.split(","));
-    console.log(res)
+    textByLine.shift();
+    textByLine.map((line) => {
+        const data = line.split(",");
+        createLetter({
+            letterID: data[0],
+            letterType: data[1],
+            insureId: data[2],
+            destributionType: data[3],
+            status: data[4]
+        })
+    });
 };
 
 
 function createLetter(letter) {
-    Letter.create({
-        letterID: letter.letterID,
-        letterType: letter.letterType,
-        insureId: letter.insureId,
-        destributionType: letter.destributionType,
-        status: letter.status,
-    }).then((res) => {
-        console.log('done', res);
-    }).catch(err => {
-        console.log(err);
-    });
+    sequelize.sync()
+        .then(() => {
+            return Letter.create({
+                letterID: letter.letterID,
+                letterType: letter.letterType,
+                insureId: letter.insureId,
+                destributionType: letter.destributionType,
+                status: letter.status,
+            });
+        })
+        .then((res) => {
+            console.log('done', res);
+        }).catch(err => {
+            console.log(err);
+        });
 };
 
-createLetter({
-    letterID: 90050,
-    letterType: '1001',
-    insureId: 111111111,
-    destributionType: 'SMS',
-    status: 'Success'
-})
 
 
 function moveFileToDoneFolder(file) {
