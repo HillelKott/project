@@ -3,12 +3,14 @@ const app = express();
 const fs = require('fs');
 
 const sequelize = require('./db');
-const Letter = require('./models/letter');
+const Letter = require('./models/Letter');
 const query = require('./query');
 
 const port = process.env.PORT || 5000;
 const inputFolder = __dirname;
 const initialCsv = '/csv_files/';
+
+app.use('/insureId/', require('./routes'))
 
 app.get('/', (req, res) => {
     res.send('hello world !');
@@ -17,7 +19,7 @@ app.get('/', (req, res) => {
 // setInterval(() => {
 checkFolder(inputFolder + initialCsv)
 // }, 5000)
-query()
+
 const filesInFolder = []
 
 function checkFolder() {
@@ -85,7 +87,7 @@ function moveFileToDoneFolder(file) {
 
     fs.copyFile(`${inputFolder}/csv_files/${file}`, `${inputFolder}/done/${file}`, (err) => {
         if (err) throw err;
-        console.log(`${file}was copied to destination`);
+        console.log(`${file} was copied to destination`);
         fs.unlink(`csv_files/${file}`, function (err) {
             if (err) console.error("Error occurred while trying to remove file");
             else {
