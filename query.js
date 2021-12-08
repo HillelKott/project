@@ -1,6 +1,6 @@
 const Letter = require("./models/Letter");
 
-const DestributionType = require('./config/config')
+const { DestributionType } = require('./config/config')
 const { SMS, eMail, PRINT } = DestributionType;
 
 async function query(insureId) {

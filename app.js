@@ -7,8 +7,7 @@ const sequelize = require('./db');
 const Letter = require('./models/Letter');
 
 const inputFolder = __dirname;
-const initialCsv = '/csv_files/';
-const doneRoute = '/done';
+const { initialCsv, doneRoute } = require('./config/config');
 
 app.use('/insureId/', require('./routes'))
 app.use('/', require('./routes'))
@@ -17,7 +16,6 @@ setInterval(() => {
     checkFolder(inputFolder + initialCsv)
 }, 5 * 60 * 100)
 
-const filesInFolder = []
 
 function checkFolder() {
     fs.readdir(inputFolder + initialCsv, (err, files) => {
@@ -26,10 +24,8 @@ function checkFolder() {
         } else {
             files.length > 0 && files.forEach(file => {
                 if (file.endsWith('.csv')) {
-                    filesInFolder.push(file)
                     console.log('new file', file);
                     readCsvFile(file);
-                    moveFileToDoneFolder(file);
                 } else {
                     console.log('not a csv file', file);
                 }
@@ -39,18 +35,22 @@ function checkFolder() {
 }
 
 function readCsvFile(file) {
-    const textByLine = fs.readFileSync(inputFolder + initialCsv + file).toString().split("\n");
-    textByLine.shift();
-    textByLine.map((line) => {
-        const data = line.split(",");
-        createLetter({
-            letterID: data[0],
-            letterType: data[1],
-            insureId: data[2],
-            destributionType: data[3],
-            status: data[4]
-        })
-    });
+    const myPromise = new Promise((resolve, reject) => {
+        const textByLine = fs.readFileSync(inputFolder + initialCsv + file).toString().split("\n");
+        textByLine.shift();
+        textByLine.map((line) => {
+            const data = line.split(",");
+            createLetter({
+                letterID: data[0],
+                letterType: data[1],
+                insureId: data[2],
+                destributionType: data[3],
+                status: data[4]
+            });
+        });
+        resolve();
+    })
+    myPromise.then(() => moveFileToDoneFolder(file));
 };
 
 
@@ -65,24 +65,21 @@ function createLetter(letter) {
                 status: letter.status,
             });
         })
-        .then((res) => {
-            console.log('done', res);
-        }).catch(err => {
-            console.log(err);
-        });
+        .then((res) => console.log('done', res))
+        .catch(err => console.log(err));
 };
 
 
 
 function moveFileToDoneFolder(file) {
+    // fs.rename() method will move a file from one location to another.
+    // this is actualy the best way to move a file from one location to another but it makes some buge that require to stop the windows defender, so i use this method...
+
     var newPath = inputFolder + doneRoute;
 
-    if (!fs.existsSync(newPath)) {
-        console.log(newPath);
-        fs.mkdirSync(newPath);
-    };
+    if (!fs.existsSync(newPath)) fs.mkdirSync(newPath);
 
-    fs.copyFile(`${inputFolder}/csv_files/${file}`, `${inputFolder}${doneRoute}/${file}`, (err) => {
+    fs.copyFile(`${inputFolder}${initialCsv}${file}`, `${inputFolder}${doneRoute}/${file}`, (err) => {
         if (err) throw err;
         console.log(`${file} was copied to destination`);
         fs.unlink(`csv_files/${file}`, function (err) {
