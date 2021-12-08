@@ -7,11 +7,7 @@ async function query(insureId) {
     const sms = [];
     const print = [];
     const email = [];
-    const res = await Letter.findAll({
-        where: { insureId, status: 'Failed\r' }
-    })
-    // console.log(res);
-    // const res2 = await Letter.findAll({ where: { insureId: '444444444', destributionType: 'Failed\r' } });
+    const res = await Letter.findAll({ where: { insureId, status: 'Failed\r' } })
     const data = JSON.parse(JSON.stringify(res, null, 2))
 
     data.forEach(key => {

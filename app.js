@@ -1,24 +1,21 @@
 const express = require('express');
 const app = express();
 const fs = require('fs');
+const port = process.env.PORT || 5000;
 
 const sequelize = require('./db');
 const Letter = require('./models/Letter');
-const query = require('./query');
 
-const port = process.env.PORT || 5000;
 const inputFolder = __dirname;
 const initialCsv = '/csv_files/';
+const doneRoute = '/done';
 
 app.use('/insureId/', require('./routes'))
+app.use('/', require('./routes'))
 
-app.get('/', (req, res) => {
-    res.send('hello world !');
-});
-
-// setInterval(() => {
-checkFolder(inputFolder + initialCsv)
-// }, 5000)
+setInterval(() => {
+    checkFolder(inputFolder + initialCsv)
+}, 5 * 60 * 100)
 
 const filesInFolder = []
 
@@ -78,14 +75,14 @@ function createLetter(letter) {
 
 
 function moveFileToDoneFolder(file) {
-    var newPath = inputFolder + '/done';
+    var newPath = inputFolder + doneRoute;
 
     if (!fs.existsSync(newPath)) {
         console.log(newPath);
         fs.mkdirSync(newPath);
     };
 
-    fs.copyFile(`${inputFolder}/csv_files/${file}`, `${inputFolder}/done/${file}`, (err) => {
+    fs.copyFile(`${inputFolder}/csv_files/${file}`, `${inputFolder}${doneRoute}/${file}`, (err) => {
         if (err) throw err;
         console.log(`${file} was copied to destination`);
         fs.unlink(`csv_files/${file}`, function (err) {
