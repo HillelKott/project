@@ -1,12 +1,13 @@
-const Letter = require("./models/Letter");
-
-const { DestributionType } = require('./config/config')
+const Letter = require('../models/Letter')
+const { DestributionType } = require('../config/config')
 const { SMS, eMail, PRINT } = DestributionType;
 
 async function query(insureId) {
+
     const sms = [];
     const print = [];
     const email = [];
+
     const res = await Letter.findAll({ where: { insureId, status: 'Failed\r' } })
     const data = JSON.parse(JSON.stringify(res, null, 2))
 

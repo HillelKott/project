@@ -1,9 +1,8 @@
 const Sequelize = require('sequelize');
 
-const sequelize = require('../db')
+const sequelize = require('../config/db')
 
 const Letter = sequelize.define('Letter', {
-  // Model attributes are defined here
   letterID: {
     type: Sequelize.INTEGER,
     allowNull: false
@@ -26,6 +25,4 @@ const Letter = sequelize.define('Letter', {
   },
 });
 
-// `sequelize.define` also returns the model
-console.log(Letter === sequelize.models.Letter); // true
 module.exports = Letter;

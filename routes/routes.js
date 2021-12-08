@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const query = require('./query');
+const query = require('../controls/query');
 
 // @route   GET /
 // @desc    Get insureId localhost is running
@@ -11,7 +11,7 @@ router.get('/', (req, res) => {
 
 // @route   GET /insureId/ <insureId>
 // @desc    Get insureId faild letters id's
-router.get('/:insureId', (req, res) => {
+router.get('/:insureId', async (req, res) => {
     // Basically better to use post here, But I do not want to open postman...
 
     const { insureId } = req.params;
@@ -24,8 +24,11 @@ router.get('/:insureId', (req, res) => {
         res.status(400).send('You must provide a valid insureId');
     } else {
         query(insureId)
-            .then(result => res.status(200).json(result))
-            .catch(err => res.status(400).send(err));
+            .then(result => {
+                console.log(result);
+                res.status(200).json(result)
+            })
+            .catch(err => res.status(400).send('nkkjkjk!'));
     };
 
 });
