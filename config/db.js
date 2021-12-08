@@ -1,5 +1,7 @@
 const Sequelize = require("sequelize");
 
+// It was impossible to H2 here, he is working only with JAVA
+
 const sequelize = new Sequelize('ins_db', 'root', 'hilleladel', {
     host: 'localhost',
     dialect: 'mysql'

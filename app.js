@@ -8,9 +8,9 @@ const checkFolder = require('./controls/heandleCsv');
 app.use('/insureId/', require('./routes/routes'))
 app.use('/', require('./routes/routes'))
 
-// setInterval(() => {
-checkFolder(inputFolder)
-// }, 5 * 60 * 100)
+setInterval(() => {
+    checkFolder(inputFolder)
+}, 5 * 60 * 100)
 
 
 app.listen(port, console.log(`app is running on port ${port}`));
