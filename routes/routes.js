@@ -28,7 +28,7 @@ router.get('/:insureId', async (req, res) => {
                 console.log(result);
                 res.status(200).json(result)
             })
-            .catch(err => res.status(400).send('nkkjkjk!'));
+            .catch(err => res.status(400).send('no user with given id!'));
     };
 
 });

@@ -1,6 +1,7 @@
 const Letter = require('../models/Letter')
 const { DestributionType } = require('../config/config')
 const { SMS, eMail, PRINT } = DestributionType;
+const Op = require('Sequelize').Op;
 
 async function query(insureId) {
 
@@ -8,7 +9,13 @@ async function query(insureId) {
     const print = [];
     const email = [];
 
-    const res = await Letter.findAll({ where: { insureId, status: 'Failed\r' } })
+    const res = await Letter.findAll({
+        where: {
+            insureId, status: {
+                [Op.or]: ['Failed\r', 'Failed']
+            }
+        }
+    })
     const data = JSON.parse(JSON.stringify(res, null, 2))
 
     data.forEach(key => {
